@@ -580,18 +580,9 @@ class TurnRequestHandler(webapp2.RequestHandler):
 
 	def get(self):
 		key = self.request.get('key')
-		
-		if key is None or key == '':
-			self.response.out.write('{ \"error\":\"Key error.\" }')
-		return
-		
-		username = self.request.get('username')
-		if username is None or username == '':
-			self.response.out.write('{ \"error\":\"Username error.\" }')
-		return
-	
-		self.response.headers.add_header("Access-Control-Allow-Origin", '*')
 
+		username = self.request.get('username')
+		
 		shared_key = os.environ['SHARED_KEY']
 		turn_ip = os.environ['TURN_IP']
 		turn_port = os.environ['TURN_PORT']

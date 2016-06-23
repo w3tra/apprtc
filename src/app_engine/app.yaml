@@ -37,6 +37,9 @@ handlers:
 - url: /.*
   script: apprtc.app
   secure: always
+  
+- url: /turn.*
+  script: turn.app
 
 libraries:
 - name: jinja2
@@ -45,6 +48,10 @@ libraries:
   version: latest
 - name: pycrypto
   version: latest
+- name: webapp2
+  version: "2.5.2"
+- name: django
+  version: "1.2"
 
 env_variables:
   BYPASS_JOIN_CONFIRMATION: false

@@ -576,6 +576,38 @@ class ParamsPage(webapp2.RequestHandler):
     params = get_room_parameters(self.request, None, None, None)
     self.response.write(json.dumps(params))
 
+class TurnRequestHandler(webapp2.RequestHandler):
+
+	def get(self):
+		key = self.request.get('key')
+		if not 'Origin' in self.request.headers:
+			return self.response.out.write('{ \"error\":\"No origin.\" }')
+		else:
+
+			correctKey = originToKey(self.request.headers['Origin'])
+			if correctKey is None:
+				self.response.out.write('{ \"error\":\"Origin not allowed.\", \"origin\":\"%s\" }' % (self.request.headers['Origin']))
+				return
+				
+			if correctKey != "" and key != correctKey:
+				self.response.out.write('{ \"error\":\"Key error.\" }')
+				return
+
+			self.response.headers.add_header("Access-Control-Allow-Origin", self.request.headers['Origin'])
+
+		if not self.request.headers['User-Agent'].startswith('Mozilla'):
+			self.response.out.write('{ \"error\":\"Get yourself a web browser!\" }')
+			return
+
+		username = self.request.get('username')
+		if username is None or username == '':
+			self.response.out.write('{ \"error\":\"Username error.\" }')
+			return
+		
+		shared_key = os.environ['SHARED_KEY']
+		turn_ip = os.environ['TURN_IP']
+		turn_port = os.environ['TURN_PORT']
+		self.response.out.write("{ \"username\":\"%s\", \"uris\": [ \"turn:%s:%s?transport=udp\", \"turn:%s:%s?transport=tcp\" ], \"password\":\"%s\", \"ttl\":86400 }" % (username, turn_ip, turn_port, turn_ip, turn_port, shared_key))
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -586,4 +618,5 @@ app = webapp2.WSGIApplication([
     ('/message/([a-zA-Z0-9-_]+)/([a-zA-Z0-9-_]+)', MessagePage),
     ('/params', ParamsPage),
     ('/r/([a-zA-Z0-9-_]+)', RoomPage),
+    ('/turn', TurnRequestHandler),
 ], debug=True)

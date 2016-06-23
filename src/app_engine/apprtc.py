@@ -583,9 +583,9 @@ class TurnRequestHandler(webapp2.RequestHandler):
 
 		username = self.request.get('username')
 		
-		shared_key = os.environ['SHARED_KEY']
-		turn_ip = os.environ['TURN_IP']
-		turn_port = os.environ['TURN_PORT']
+		shared_key = 'SHARED_KEY_REPLACE'
+		turn_ip = 'TURN_IP_REPLACE'
+		turn_port = 'TURN_PORT_REPLACE'
 		self.response.out.write("{ \"username\":\"%s\", \"uris\": [ \"turn:%s:%s?transport=udp\", \"turn:%s:%s?transport=tcp\" ], \"password\":\"%s\", \"ttl\":86400 }" % (username, turn_ip, turn_port, turn_ip, turn_port, shared_key))
 
 app = webapp2.WSGIApplication([

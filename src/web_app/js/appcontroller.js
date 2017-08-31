@@ -121,7 +121,7 @@ var AppController = function(loadingParams) {
       var confirmJoinDiv = $(UI_CONSTANTS.confirmJoinDiv);
       this.show_(confirmJoinDiv);
 
-      $(UI_CONSTANTS.confirmJoinButton).onclick = function() {
+      var onready = function() {
         this.hide_(confirmJoinDiv);
 
         // Record this room in the recently used list.
@@ -129,6 +129,7 @@ var AppController = function(loadingParams) {
         recentlyUsedList.pushRecentRoom(this.loadingParams_.roomId);
         this.finishCallSetup_(this.loadingParams_.roomId);
       }.bind(this);
+      document.addEventListener('DOMContentLoaded', onready);
 
       if (this.loadingParams_.bypassJoinConfirmation) {
         $(UI_CONSTANTS.confirmJoinButton).onclick();
